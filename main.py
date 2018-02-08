@@ -1,34 +1,43 @@
 import random
 import math
+import fanpath
+from position import *
+from obstacle import *
 from tkinter import *
 
-class Obstacle:
-    def __init__(self):
-        #give an obstacle random x and y coordinates, and a random radius
-        random.seed()
-        
-        self.radius = random.uniform(40, 50)
-        self.x = random.uniform(0+self.radius, 1000-self.radius)
-        self.y = random.uniform(0+self.radius, 500-self.radius)
-        
-    def distanceFromPoint(self, x, y):
-        #returns the distance from a pair of xy coordinates to the object
-        return math.sqrt(math.pow(self.x-x, 2) + math.pow(self.y-y, 2)) - self.radius
+FIELD_WIDTH = 1000
+FIELD_HEIGHT = 600
+
 
 #initialize an empty list
 obstacle_list = []
 
 #add 11 obstacles to the list
 for i in range(11):
-    obstacle_list.append(Obstacle())
+    radius = random.uniform(40, 50)
+    pos = Position(random.uniform(0+radius, FIELD_WIDTH-radius), random.uniform(0+radius, FIELD_HEIGHT-radius))
+    obstacle_list.append(Obstacle(pos, radius))
 
 #visualization stuff
 master = Tk()
-w = Canvas(master, width=1000, height=600)
+w = Canvas(master, width=FIELD_WIDTH, height=FIELD_HEIGHT)
 w.pack()
 
 #draw the obstacles on the canvas
 for i in obstacle_list:
-    w.create_oval(i.x+i.radius, i.y+i.radius, i.x-i.radius, i.y-i.radius, fill="red")
+    w.create_oval(i.position.x+i.radius, i.position.y+i.radius, i.position.x-i.radius, i.position.y-i.radius, fill="red")
+
+startpos = Position(0, 0)
+endpos = Position(FIELD_WIDTH, FIELD_HEIGHT)
+
+path = fanpath.calculatepath(obstacle_list, startpos, endpos)
+
+lastx = 0
+lasty = 0
+for coord in path:
+    w.create_line(lastx, lasty, coord.x, coord.y)
+    lastx = coord.x
+    lasty = coord.y
+
 
 mainloop()
