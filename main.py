@@ -30,7 +30,7 @@ for i in obstacle_list:
 startpos = Position(0, 0)
 endpos = Position(FIELD_WIDTH, FIELD_HEIGHT)
 
-path = fanpath.calculatepath(obstacle_list, startpos, endpos)
+path = fanpath.simplefan(obstacle_list, startpos, endpos)
 
 lastx = 0
 lasty = 0
