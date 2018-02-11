@@ -11,4 +11,10 @@ class Position:
         if self.x < xhigher and self.x > xlower and self.y < yhigher and self.y > ylower:
             return True
         return False
+    def withinObstacles(self,obstacles):
+        withinObst = False
+        for obstacle in obstacles:
+            if self.distanceTo(obstacle.position) < obstacle.radius:
+                withinObst = True
+        return withinObst
         
