@@ -7,7 +7,7 @@ FIELD_WIDTH = 1000
 FIELD_HEIGHT = 600
 NUM_WAYPOINTS = 2
 NUM_OBSTACLE = 10
-USE_GUI = True#Whether to enable the gui
+USE_GUI = False#Whether to enable the gui
 
 #0:fanpath
 #1:rubberpath
@@ -24,20 +24,15 @@ w.pack()
 for i in obstacle_list:
     w.create_oval(i.position.x+i.radius, i.position.y+i.radius, i.position.x-i.radius, i.position.y-i.radius, fill="red")
 
-if WHICH_ALGORITHM == 0:
-    path = fanpath.simplefan(obstacle_list, waypoint_list[0], waypoint_list[1])
+paths = [] #append your paths to this list to draw them all at once (for comparison)
+paths.append(fanpath.extendingfan(obstacle_list, waypoint_list[0], waypoint_list[1]))
+#paths.append(fanpath.simplefan(obstacle_list, waypoint_list[0], waypoint_list[1]))
+#paths.append(rubberpath.rubberpath(obstacle_list, waypoint_list))
 
-    lastx = waypoint_list[0].x
-    lasty = waypoint_list[0].y
-    for coord in path:
-        w.create_line(lastx, lasty, coord.x, coord.y)
-        lastx = coord.x
-        lasty = coord.y
-else:
-    segmentspath = rubberpath.rubberpath(obstacle_list,waypoint_list)
+for path in paths:
+	for segment in path:
+		w.create_line(segment.startPos.x,segment.startPos.y,segment.endPos.x,segment.endPos.y)
 
-    for segment in segmentspath:
-        w.create_line(segment.startPos.x,segment.startPos.y,segment.endPos.x,segment.endPos.y)
 
 
 mainloop()
