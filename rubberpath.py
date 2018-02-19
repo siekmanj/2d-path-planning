@@ -19,14 +19,17 @@ while intersections
             segments.insert(current+1,segment2)
 '''
 from segment import *
+import drawObstaclesPath
 
-def rubberpath(obstacle_list,waypoint_list):
+def rubberpath(obstacle_list,waypoint_list,draw,height,width):
     overall_path = []
     for i in range(0,len(waypoint_list)-1):
         #segments holds the path from one waypoint to another
         segments = []
         #Add the initial segment from the start point to the end
         segments.append(Segment(waypoint_list[i],waypoint_list[i+1]))
+
+
 
         intersections = True
         while intersections:
@@ -42,8 +45,16 @@ def rubberpath(obstacle_list,waypoint_list):
                     intersections = True
                     buffer_segments.append(segment2)
                     numintersections += 1
+                if draw:
+                    # prep the paths variable for drawing
+                    paths = [segments,buffer_segments]
+                    drawObstaclesPath.drawObstaclesPath(obstacle_list, paths, height, width)
+
             segments = buffer_segments
 
+
         overall_path.extend(segments)
+
+
 
     return overall_path
