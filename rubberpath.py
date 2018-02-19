@@ -23,38 +23,39 @@ import drawObstaclesPath
 
 def rubberpath(obstacle_list,waypoint_list,draw,height,width):
     overall_path = []
-    for i in range(0,len(waypoint_list)-1):
-        #segments holds the path from one waypoint to another
-        segments = []
-        #Add the initial segment from the start point to the end
+
+    #segments holds the path from one waypoint to another
+    segments = []
+    #Add the initial segments to the path
+    for i in range(len(waypoint_list)-1):
         segments.append(Segment(waypoint_list[i],waypoint_list[i+1]))
 
 
 
-        intersections = True
-        while intersections:
-            #reset intersections to false and only set to true of one is found
-            intersections = False
-            numintersections = 0
-            numSegments = len(segments)
-            buffer_segments = []
-            for j in range(0,numSegments):
-                segment1,segment2 = segments[j].stretch(obstacle_list,5)
-                buffer_segments.append(segment1)
-                if segment2 != 0:
-                    intersections = True
-                    buffer_segments.append(segment2)
-                    numintersections += 1
-                if draw:
-                    # prep the paths variable for drawing
-                    paths = [segments,buffer_segments]
-                    drawObstaclesPath.drawObstaclesPath(obstacle_list, paths, height, width)
+    intersections = True
+    while intersections:
+        #reset intersections to false and only set to true of one is found
+        intersections = False
+        numintersections = 0
+        numSegments = len(segments)
+        buffer_segments = []
+        for j in range(0,numSegments):
+            segment1,segment2 = segments[j].stretch(obstacle_list,5)
+            buffer_segments.append(segment1)
+            if segment2 != 0:
+                intersections = True
+                buffer_segments.append(segment2)
+                numintersections += 1
+            if draw:
+                # prep the paths variable for drawing
+                paths = [segments,buffer_segments]
+                drawObstaclesPath.drawObstaclesPath(obstacle_list, paths, height, width)
 
-            segments = buffer_segments
-
-
-        overall_path.extend(segments)
+        segments = buffer_segments
 
 
 
-    return overall_path
+
+
+
+    return segments

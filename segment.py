@@ -35,7 +35,10 @@ class Segment:
 
 
         #Check if it is outside of the line segment
-        if(minDistancePt.x < self.startPos.x and minDistancePt.x < self.endPos.x)and(minDistancePt.y < self.startPos.y and minDistancePt.y < self.endPos.y)or(minDistancePt.x > self.startPos.x and minDistancePt.x > self.endPos.x)and(minDistancePt.y > self.startPos.y and minDistancePt.y > self.endPos.y):
+        if(minDistancePt.x < self.startPos.x and minDistancePt.x < self.endPos.x)and(minDistancePt.y < self.startPos.y and minDistancePt.y < self.endPos.y)\
+                or(minDistancePt.x > self.startPos.x and minDistancePt.x > self.endPos.x)and(minDistancePt.y > self.startPos.y and minDistancePt.y > self.endPos.y) \
+                or (minDistancePt.x > self.startPos.x and minDistancePt.x > self.endPos.x) and (minDistancePt.y < self.startPos.y and minDistancePt.y < self.endPos.y) \
+                or (minDistancePt.x < self.startPos.x and minDistancePt.x < self.endPos.x) and (minDistancePt.y > self.startPos.y and minDistancePt.y > self.endPos.y):
             return 0
         else:
             return minDistancePt
