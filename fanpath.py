@@ -48,7 +48,7 @@ def extendingfan(obstacleList, startpos, endpos):
 		for theta in range(0, math.floor((2*math.pi)*100)): #fan through 0 to 2pi
 			usable = True #boolean to keep track of whether the extending segment goes through an obstacle
 			for segmentLength in range(1, 15):
-				testpos = Position(currentpos.x + segmentLength * 10 * math.cos(theta/100), currentpos.y + segmentLength * 10 * math.sin(theta/100))
+				testpos = Position(currentpos.x + segmentLength * 15 * math.cos(theta/100), currentpos.y + segmentLength * 15 * math.sin(theta/100))
 				if testpos.within(0, 0, 1000, 600): #if the test position is within the bounds of the field
 					testfitness = 1/testpos.distanceTo(endpos) #the fitness is equal to 1 over the distance (shorter distance, higher score)
 

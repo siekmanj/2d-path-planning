@@ -26,9 +26,9 @@ for i in obstacle_list:
 
 paths = [] #append your paths to this list to draw them all at once (for comparison)
 paths.append(fanpath.extendingfan(obstacle_list, waypoint_list[0], waypoint_list[1]))
-#paths.append(fanpath.simplefan(obstacle_list, waypoint_list[0], waypoint_list[1]))
+paths.append(fanpath.simplefan(obstacle_list, waypoint_list[0], waypoint_list[1]))
 #paths.append(rubberpath.rubberpath(obstacle_list, waypoint_list))
-
+print(len(paths[0]))
 for path in paths:
 	for segment in path:
 		w.create_line(segment.startPos.x,segment.startPos.y,segment.endPos.x,segment.endPos.y)
