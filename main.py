@@ -11,7 +11,6 @@ SHOW_RUBBER_STEPS = False
 USE_GUI = True#Whether to enable the gui
 
 
-
 waypoint_list, obstacle_list = fieldgen.fieldGen(FIELD_WIDTH, FIELD_HEIGHT,USE_GUI , NUM_OBSTACLE, NUM_WAYPOINTS)
 
 paths = []  # append your paths to this list to draw them all at once (for comparison)
