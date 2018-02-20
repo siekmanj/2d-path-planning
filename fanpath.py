@@ -3,9 +3,21 @@ from segment import *
 import math
 import random
 
+def multWaypointFan(obstacleList,waypointList,algorithm):
+	#This function will just iterate over the other fan functions and allow for multiple waypoints to be used
+	overallPath = []
+	for i in range(len(waypointList)-1):
+		#iterate through all of the waypoint segments
+		if algorithm == 'simplefan':
+			#This should extend the overall path by the result ofo the simple fan algorithm between the two current waypoints
+			overallPath.extend(simplefan(obstacleList,waypointList[i],waypointList[i+1]))
+		else:
+			overallPath.extend(extendingfan(obstacleList, waypointList[i], waypointList[i + 1]))
+	return overallPath
+
 #this is a simple path planner I came up with on the fly without too much thought put into it
 def simplefan(obstacleList, startpos, endpos):
-    segmentLength = 10 
+    segmentLength = 10
     currentpos = startpos
     segments = []
     for i in range(100): #loop forever until the end condition is met
