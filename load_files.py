@@ -8,7 +8,7 @@ cfg = configparser.ConfigParser()
 cfg.read(CFG_FILE_NAME)
 
 FIELD_WIDTH = int(cfg['general']['FieldWidth'])
-FIELD_HEIGHT = int(cfg['general']['FieldWidth'])
+FIELD_HEIGHT = int(cfg['general']['FieldHeight'])
 
 
 PathFileName = cfg['files']['Path']
