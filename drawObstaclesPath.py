@@ -13,7 +13,6 @@ def drawObstaclesPath(obstacles,paths,height,width):
         w.create_oval(i.position.x + i.radius, i.position.y + i.radius, i.position.x - i.radius,
                       i.position.y - i.radius, fill="red")
 
-
     colors = ['orange','blue','green']
     for i in range(len(paths)):
         for segment in paths[i]:
