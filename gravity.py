@@ -7,20 +7,17 @@ SLOPE  = 30
 ATTRACTION = -1
 CONCAVITY = 50
 
-MAX_SPEED = 10
-
-FIELD_HEIGHT = 600
-FIELD_WIDTH = 1000
+MAX_SPEED = 1
 
 #this kind of works sometimes
-def simplegravity(obstacleList, waypointList):
+def simplegravity(obstacleList, waypointList, FIELD_HEIGHT, FIELD_WIDTH):
 	currentpos = waypointList[0];
 	segments = []
 	xspd = 0
 	yspd = 0
 	for i in range(len(waypointList)-1):
 		if not currentpos.distanceTo(waypointList[i+1]) == 0:
-			for j in range(1500):
+			for j in range(15000):
 				start = currentpos
 				#calculate attractive force to end position
 				xspd += ATTRACTION * math.cos(currentpos.angle(waypointList[i+1]))# * (1/(currentpos.distanceTo(waypointList[i+1])**2))
@@ -39,7 +36,7 @@ def simplegravity(obstacleList, waypointList):
 					yspd += yacc
 						
 				#calculate repulsive forces from walls (currently not working)
-				if(inbounds(currentpos)):
+				if(inbounds(currentpos, FIELD_HEIGHT, FIELD_WIDTH)):
 					xspd += CONCAVITY / ((currentpos.x - FIELD_WIDTH)**2)
 					xspd += CONCAVITY / ((currentpos.x)**2)
 					yspd += CONCAVITY / ((currentpos.y - FIELD_WIDTH)**2)
@@ -63,7 +60,7 @@ def simplegravity(obstacleList, waypointList):
 					break
 	return segments
 
-def inbounds(pos):
+def inbounds(pos, FIELD_HEIGHT, FIELD_WIDTH):
 	if(pos.x <= 0 or pos.x > FIELD_WIDTH or pos.y <= 0 or pos.y > FIELD_HEIGHT):
 		return False
 	return True
