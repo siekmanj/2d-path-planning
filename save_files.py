@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import fieldgen
 import fanpath
 import rubberpath
