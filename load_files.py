@@ -1,23 +1,10 @@
 import drawObstaclesPath
 import readFile
-import configparser
+import globalvars
 
 def load_files():
-  CFG_FILE_NAME = 'config.ini'
+  paths = readFile.readFile(globalvars.FILENAME_PATHS)
+  waypoint_list = readFile.readFile(globalvars.FILENAME_WAYPOINTS)
+  obstacle_list = readFile.readFile(globalvars.FILENAME_OBSTACLES)
 
-  cfg = configparser.ConfigParser()
-  cfg.read(CFG_FILE_NAME)
-
-  FIELD_WIDTH = int(cfg['general']['FieldWidth'])
-  FIELD_HEIGHT = int(cfg['general']['FieldHeight'])
-
-
-  PathFileName = cfg['files']['Path']
-  WaypointFileName = cfg['files']['Waypoint']
-  ObstacleFileName = cfg['files']['Obstacle']
-
-  paths = readFile.readFile(PathFileName)
-  waypoint_list = readFile.readFile(WaypointFileName)
-  obstacle_list = readFile.readFile(ObstacleFileName)
-
-  drawObstaclesPath.drawObstaclesPath(obstacle_list,paths,FIELD_HEIGHT,FIELD_WIDTH)
+  drawObstaclesPath.drawObstaclesPath(obstacle_list,paths,globalvars.FIELD_HEIGHT,globalvars.FIELD_WIDTH)

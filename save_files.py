@@ -2,37 +2,21 @@ import fieldgen
 import fanpath
 import rubberpath
 import writeFile
-import configparser
+import globalvars
 
 def save_files():
-  CFG_FILE_NAME = 'config.ini'
-
-  cfg = configparser.ConfigParser()
-  cfg.read(CFG_FILE_NAME)
-
-  FIELD_WIDTH = int(cfg['general']['FieldWidth'])
-  FIELD_HEIGHT = int(cfg['general']['FieldHeight'])
-  NUM_WAYPOINTS = int(cfg['general']['NumWaypoints'])
-  NUM_OBSTACLE = int(cfg['general']['NumObstacles'])
-  SHOW_RUBBER_STEPS = cfg['rubberpath'].getboolean('UseRubberSteps')
-  USE_GUI = cfg['fieldGen'].getboolean('UseGUI') #Whether to enable the gui
-
-
-  waypoint_list, obstacle_list = fieldgen.fieldGen(FIELD_WIDTH, FIELD_HEIGHT,USE_GUI , NUM_OBSTACLE, NUM_WAYPOINTS)
+  waypoint_list, obstacle_list = fieldgen.fieldGen(globalvars.FIELD_WIDTH, globalvars.FIELD_HEIGHT,globalvars.USE_GUI , globalvars.NUM_OBSTACLE, globalvars.NUM_WAYPOINTS)
 
   paths = []  # append your paths to this list to draw them all at once (for comparison)
-  paths.append(fanpath.multWaypointFan(obstacle_list,waypoint_list,'simplefan', FIELD_WIDTH, FIELD_HEIGHT))
-  paths.append(fanpath.multWaypointFan(obstacle_list,waypoint_list,'extendingfan', FIELD_WIDTH, FIELD_HEIGHT))
-  paths.append(rubberpath.rubberpath(obstacle_list, waypoint_list,SHOW_RUBBER_STEPS,FIELD_HEIGHT,FIELD_WIDTH))
+  paths.append(fanpath.multWaypointFan(obstacle_list,waypoint_list,'simplefan', globalvars.FIELD_WIDTH, globalvars.FIELD_HEIGHT))
+  paths.append(fanpath.multWaypointFan(obstacle_list,waypoint_list,'extendingfan', globalvars.FIELD_WIDTH, globalvars.FIELD_HEIGHT))
+  paths.append(rubberpath.rubberpath(obstacle_list, waypoint_list,globalvars.SHOW_RUBBER_STEPS,globalvars.FIELD_HEIGHT,globalvars.FIELD_WIDTH))
 
   for p in range(len(paths)):
     for i in range(len(paths[p])):
       print('path {} segment {}: sx={}, sy={};\tex={}, ey={}'.format(p, i, paths[p][i].startPos.x, paths[p][i].startPos.y, paths[p][i].endPos.x, paths[p][i].endPos.y))
 
-  PathFileName = cfg['files']['Path']
-  WaypointFileName = cfg['files']['Waypoint']
-  ObstacleFileName = cfg['files']['Obstacle']
 
-  writeFile.writeFile(PathFileName, paths)
-  writeFile.writeFile(WaypointFileName, waypoint_list)
-  writeFile.writeFile(ObstacleFileName, obstacle_list)
+  writeFile.writeFile(globalvars.FILENAME_PATHS, paths)
+  writeFile.writeFile(globalvars.FILENAME_WAYPOINTS, waypoint_list)
+  writeFile.writeFile(globalvars.FILENAME_OBSTACLES, obstacle_list)
