@@ -17,7 +17,6 @@ def drawObstaclesPath(obstacles,paths,height,width):
     colors = ['orange','blue','green']
     for i in range(len(paths)):
         for segment in paths[i]:
-            print("DRAWING AT " + str(segment.startPos.x) + ", " + str(segment.startPos.y) + " TO " + str(segment.endPos.x) + ", " + str(segment.endPos.y))
             w.create_line(segment.startPos.x, segment.startPos.y, segment.endPos.x, segment.endPos.y,fill=colors[i])
 
     mainloop()
