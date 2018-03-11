@@ -20,7 +20,7 @@ def simplefan(obstacleList, startpos, endpos, width, height):
     segmentLength = 10
     currentpos = startpos
     segments = []
-    for i in range(100): #loop forever until the end condition is met
+    for i in range(1000): #loop forever until the end condition is met
         bestscore = 0 #initialize best score
         bestpos = currentpos #initialize best position
         for theta in range(0, math.floor((2*math.pi)*100)): #fan through 0 to 2pi

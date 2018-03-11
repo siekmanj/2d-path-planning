@@ -53,7 +53,7 @@ class Segment:
         for obstacle in obstacles:
             minDistancePt = self.minDistancePoint(obstacle.position)
             if minDistancePt != 0:
-                if minDistancePt.distanceTo(obstacle.position) < obstacle.radius:
+                if minDistancePt.distanceTo(obstacle.position) < obstacle.radius+3:
 
                     return minDistancePt,obstacle
                     returned = True
