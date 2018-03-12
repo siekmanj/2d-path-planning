@@ -1,12 +1,12 @@
 function [radCurvature] = GetRadCurvature(pathPolys,arcParams)
-%GETRADCURVATURE This function will numerically calculate the radius of
-%curvature of the path at all of the given points, and will then output
-%that value
-%
+% GETRADCURVATURE This function will numerically calculate the radius of
+% curvature of the path at all of the given points, and will then output
+% that value
+% 
 % Inputs:
 %   pathPolys: parametric x and y piecewise polynomials for path
 %   arcParams: the parameter values for equal arc length
-%
+% 
 % Outputs: 
 %   radCurvature: Array of the radius of curvature(make sure it is the same length)
 

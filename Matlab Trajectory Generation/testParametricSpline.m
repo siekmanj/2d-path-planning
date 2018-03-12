@@ -15,7 +15,7 @@ controlPts = [x,y];
 
 waypoints = [0,0;200,200];
 
-veff = 15;
+veff = 12;
 
 %Flight Characteristics
 fc = struct;

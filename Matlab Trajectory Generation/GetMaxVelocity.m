@@ -1,8 +1,8 @@
 function [vmax] = GetMaxVelocity(radCurvature,fc)
-%GETMAXVELOCITY This function will calculate the maximum velocity that the
-%UAV can fly such that the maximum force is still sufficient to provide the
+% GETMAXVELOCITY This function will calculate the maximum velocity that the
+% UAV can fly such that the maximum force is still sufficient to provide the
 % centripetal force required as a function of the curvature
-%
+% 
 % Input:
 %   radCurvature: array with the radius of curvature at each of the
 %       points parametrized by arc length
@@ -12,6 +12,10 @@ function [vmax] = GetMaxVelocity(radCurvature,fc)
 %       -density: Density of air in kg/m^3
 %       -cd: Coefficient of drag for copter
 %       -refarea: Drag reference area
+%
+% Output
+%   vmax: This is an array of the maximum velocities the drone can fly at
+%   based on turning at each point
 
 %Parameters
 g = 9.8;%m/s^2

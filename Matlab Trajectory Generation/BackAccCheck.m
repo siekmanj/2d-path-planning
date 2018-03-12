@@ -1,10 +1,10 @@
 function [vmaxOut] = BackAccCheck(vmaxIn,fc,dr)
-%BACACCCHECK This function will filter the max velocity profile backwards
+% BACACCCHECK This function will filter the max velocity profile backwards
 %   The goal of this function is to ensure that the vmax velocity profile
 %   for the multicopter never has a negative slope(acceleration), greater
 %   than air resistance is able to provide at that speed such that the
 %   multicopter will never be have to reverse thrust
-%
+% 
 % Input:
 %   vmaxIn:This is an array of the max allowable velocity values such that
 %   the mutlicopter has the capability to corner.
@@ -16,7 +16,7 @@ function [vmaxOut] = BackAccCheck(vmaxIn,fc,dr)
 %       -density: Density of air in kg/m^3
 %       -cd: Coefficient of drag for copter
 %       -refarea: Drag reference area
-%
+% 
 % Output
 %   vmaxOut:Array in the same form of vmaxIn after the filter has been run
 
