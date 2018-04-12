@@ -23,8 +23,8 @@ def initialize_nodes(waypoint_list,obstacle_list,bound_segments):
 
 
     #Add all of the concave vertices.
-    vertexPos = getConcaveVertices(bound_segments)
-    nodes.extend(posToObstacleNodes(vertexPos))
+    vertexPos, connectedSegs = getConcaveVertices(bound_segments)
+    nodes.extend(posToObstacleNodes(vertexPos,connectedSegs))
 
     obsNumber = 0
     #Add all of the obstacles to the position nodes
@@ -44,7 +44,7 @@ def getConcaveVertices(bound_segments):
     # are concave vertices that could be used as nodes
 
     concaveVertices = []
-
+    connectedSegs = []
     for i in range(0,len(bound_segments)):
         # Iterate through all of the bound segments to figure out whether or not they are concave.
         prev_point = bound_segments[i-1].startPos
@@ -61,17 +61,20 @@ def getConcaveVertices(bound_segments):
 
         if current_point.inBounds(temp_segments):
             concaveVertices.append(current_point)
+            connectedSegs.append([i,i-1])
+    #This returns the positions of the concave vertices in a list with another 2d array with the a pair of indices for
+    #each corresponding to which bounding segments can be ignored when going through all of the
+    print(connectedSegs)
+    return concaveVertices,connectedSegs
 
-    return concaveVertices
 
-
-def posToObstacleNodes(positions):
+def posToObstacleNodes(positions,connectedSegs):
     # This is a function that will take a given position and convert it into an obstacle with radius 0 that can be used as a node
     obstacleNodes = []
 
-    for pos in positions:
-        obstacle = Obstacle(pos,0)
-        obsNode = ObstacleNode(obstacle,1,0)
+    for i in range(0,len(positions)):
+        obstacle = Obstacle(positions[i],0)
+        obsNode = ObstacleNode(obstacle,1,-1,connectedSegs[i])
         obstacleNodes.append(obsNode)
 
     return obstacleNodes
@@ -129,11 +132,11 @@ def tangentDjikstra(waypoint_list,obstacle_list,bound_segements):
                 # Make a list of all of the obstacles that need to be checked
                 obsToCheck = obstacle_list[:]
                 indToDel = []
-                if nodes[i].type != 0:
+                if nodes[i].type > 0:
                     indToDel.append(nodes[i].type - 1)
                     #print('howdy')
                     #print(nodes[i].type)
-                if minDisNode.type != 0:
+                if minDisNode.type > 0:
                     #print('hi')
                     #print(minDisNode.type)
                     indToDel.append(minDisNode.type - 1)
@@ -146,7 +149,12 @@ def tangentDjikstra(waypoint_list,obstacle_list,bound_segements):
                 for j in indToDel:
                     del obsToCheck[j]
 
-                lineIntersection = coTanSeg.getIntersecting(obsToCheck,bound_segements)
+                ignoreSegs = None
+                if minDisNode.type == -1:
+                    ignoreSegs = minDisNode.ignoreSegs
+                elif nodes[i].type == -1:
+                    ignoreSegs = nodes[i].ignoreSegs
+                lineIntersection = coTanSeg.getIntersecting(obsToCheck,bound_segements,ignoreSegs)
                 circleIntersection = minDisNode.getCircleIntersection(obsToCheck)
 
                 if (not lineIntersection) and (not circleIntersection):

@@ -10,18 +10,19 @@ class NodeBase:
     def __init__(self,position,type):
         self.position = position
         self.pathDistance = 99999#Essentially infinity
-        self.type = type#0: point 1-n:obstacle number
+        self.type = type#-1: Concave Vertex 0: point 1-n:obstacle number
         self.known = False
         self.parent = 0
 
 class ObstacleNode(NodeBase):
-    def __init__(self,obstacle,direction,type):
+    def __init__(self,obstacle,direction,type,ignoreSegs = None):
         super().__init__(obstacle.position,type)
         self.obstacle = obstacle
         self.radius = obstacle.radius
         self.direction = direction#1: CCW -1:CW
         self.firstAngle = 0#Angle from the previous intersection on the surface of the circle measure positively from the +x axis
         self.secondAngle = 0#Angle from the next intersection on the surface of the circle measure positively from the +x axis
+        self.ignoreSegs = ignoreSegs
         self.segmentIn = Segment(self.position,self.position)
 
     def getCoTanSeg(self, obsnode):

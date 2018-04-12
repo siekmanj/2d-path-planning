@@ -17,8 +17,8 @@ waypoint_list, obstacle_list, bound_segments = fieldgen.fieldGen(config.FIELD_WI
 
 paths = []  # append your paths to this list to draw them all at once (for comparison)
 realpath, allpaths, workpath = tanDjikstra.tangentDjikstra(waypoint_list,obstacle_list,bound_segments)
-paths.append(allpaths)
-paths.append(workpath)
+#paths.append(allpaths)
+#paths.append(workpath)
 paths.append(realpath)
 
 #paths.append(gravity.simplegravity(obstacle_list, waypoint_list, config.FIELD_HEIGHT, config.FIELD_WIDTH))
@@ -26,5 +26,4 @@ paths.append(realpath)
 
 save_files.save_files(paths, waypoint_list, obstacle_list)
 # load_files.load_files()
-
 drawObstaclesPath(obstacle_list, paths, bound_segments, waypoint_list, config.FIELD_HEIGHT, config.FIELD_WIDTH)
