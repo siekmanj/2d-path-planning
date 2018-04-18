@@ -19,7 +19,7 @@ def drawObstaclesPath(obstacles,paths,bound_segments,waypoint_list,height,width)
     colors = ['orange','blue','green']
     for i in range(len(paths)):
         for segment in paths[i]:
-            w.create_line(segment.startPos.x, segment.startPos.y, segment.endPos.x, segment.endPos.y,fill=colors[i])
+            w.create_line(segment.startPos.x, segment.startPos.y, segment.endPos.x, segment.endPos.y,fill=colors[i],width = 5)
 
     for segment in bound_segments:
         w.create_line(segment.startPos.x, segment.startPos.y, segment.endPos.x, segment.endPos.y, fill='red')
