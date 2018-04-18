@@ -59,12 +59,16 @@ class ObstacleNode(NodeBase):
             else:
                 alpha = gamma + beta
 
-        self.secondAngle = alpha
 
         x3 = self.position.x + r1*math.cos(startAngle-alpha)
         y3 = self.position.y + r1*math.sin(startAngle-alpha)
         x4 = obsnode.position.x + self.direction*obsnode.direction*r2 * math.cos(startAngle - alpha)
         y4 = obsnode.position.y + self.direction*obsnode.direction*r2 * math.sin(startAngle - alpha)
+
+        #Calculate the second angle for the cotangent line
+        dy = y3-self.position.y
+        dx = x3 - self.position.x
+        self.secondAngle = customMath.getAngleFromX(dx,dy)
 
 
 
@@ -129,12 +133,12 @@ class ObstacleNode(NodeBase):
             self.secondAngle -= 2 * math.pi
         angle_diff = self.firstAngle - self.secondAngle
 
-        if self.direction == 1:
-            angle_diff = 2*math.pi-angle_diff
+        #if self.direction == -1:
+        #    angle_diff = 2*math.pi-angle_diff
 
         arcDistance  = self.radius*angle_diff
         print(angle_diff)
-        return arcDistance
+        return abs(arcDistance)
 
     def getCircleIntersection(self,obstacles):
         # Normalize both of the angles to between 0 and 2pi

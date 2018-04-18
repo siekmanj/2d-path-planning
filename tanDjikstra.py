@@ -86,20 +86,20 @@ def tangentDjikstra(waypoint_list,obstacle_list,bound_segements):
     # Iterate through the process until the final node is known
     path = []
     allpath = []
-    workpath =[]
+    nonintersectingpath =[]
     while not nodes[-1].known:
         # find the minimum distance from the list
         id, minDisNode = min((enum for enum in enumerate(nodes) if not enum[1].known) , key = lambda x: x[1].pathDistance)
         #print('Id Value')
         #print(id)
         nodes[id].known = True
-        if nodes[id].type != 0 and id != 0:
-            #Set the first angle of the node
-            segment = nodes[nodes[id].parent].getCoTanSeg(nodes[id])
-            dx = segment.startPos.x - nodes[id].position.x
-            dy = segment.startPos.y - nodes[id].position.y
+        #if nodes[id].type != 0 and id != 0:
+        #    #Set the first angle of the node
+        #    segment = nodes[nodes[id].parent].getCoTanSeg(nodes[id])
+        #    dx = segment.startPos.x - nodes[id].position.x
+        #    dy = segment.startPos.y - nodes[id].position.y
 
-            nodes[id].firstAngle = customMath.getAngleFromX(dx,dy)
+        #    nodes[id].firstAngle = customMath.getAngleFromX(dx,dy)
 
         # Iterate through all of the other nodes
         for i in range(0,len(nodes)):
@@ -159,8 +159,8 @@ def tangentDjikstra(waypoint_list,obstacle_list,bound_segements):
 
                 if (not lineIntersection) and (not circleIntersection):
 
-                    workpath.append(coTanSeg)
-                    if minDisNode.type == 0:
+                    nonintersectingpath.append(coTanSeg)
+                    if minDisNode.type == 0 or minDisNode.type == -1:#If it is either of the point types tell the program that it does not eed to use the arc distance
                         possibleDistance = minDisNode.getDistanceTo(nodes[i],False)
                     else:
                         possibleDistance = minDisNode.getDistanceTo(nodes[i],True)
@@ -170,25 +170,16 @@ def tangentDjikstra(waypoint_list,obstacle_list,bound_segements):
                         nodes[i].pathDistance = possibleDistance
                         nodes[i].parent = id
                         nodes[i].segmentIn = coTanSeg
-                        if minDisNode.type == 0:
+                        if minDisNode.type == 0 or minDisNode.type == -1:
                             minDisNode.direction = nodes[i].direction
-                        if minDisNode.direction == nodes[i].direction:
+                            dx = nodes[i].segmentIn.endPos.x - nodes[i].position.x
+                            dy = nodes[i].segmentIn.endPos.y - nodes[i].position.y
+                            nodes[i].firstAngle = customMath.getAngleFromX(dx, dy)
+                        elif minDisNode.direction == nodes[i].direction:
                             nodes[i].firstAngle = minDisNode.secondAngle
                         else:
                             nodes[i].firstAngle = minDisNode.secondAngle+math.pi
-                else:
-                    print('\nrejected\n')
-                    if minDisNode.type == 0:
-                        print('Point')
-                    else:
-                        print('Circle')
-                    print(' to ')
-                    if nodes[i].type == 0:
-                        print('Point')
-                    else:
-                        print('Circle')
-                    print('\nbecause of:  ')
-                    print('\n')
+
     #Append all of the segments to the path
     currentNode = len(nodes) - 1
     #path = []
@@ -196,4 +187,4 @@ def tangentDjikstra(waypoint_list,obstacle_list,bound_segements):
         path.append(nodes[currentNode].segmentIn)
         currentNode = nodes[currentNode].parent
 
-    return path,allpath,workpath
+    return path,allpath,nonintersectingpath
