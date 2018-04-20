@@ -1,8 +1,5 @@
-from position import *
 from segment import *
 import math
-import numpy as np
-import customMath
 
 #This is a base node class for the tangent implementation of djikstras algorithm
 

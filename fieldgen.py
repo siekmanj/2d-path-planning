@@ -1,4 +1,3 @@
-from tkinter import *
 from obstacleCanvas import *
 from boundingSegment import *
 import random
