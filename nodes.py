@@ -35,7 +35,7 @@ class ObstacleNode(NodeBase):
         dy = obsnode.position.y - self.position.y
         dx = obsnode.position.x - self.position.x
 
-        gamma = -1 * customMath.getAngleFromX(dx, dy)
+        gamma = -1 * math.atan2(dy,dx)
 
         #Check if it is external or internal
         if self.direction == obsnode.direction:
@@ -68,49 +68,10 @@ class ObstacleNode(NodeBase):
         #Calculate the second angle for the cotangent line
         dy = y3-self.position.y
         dx = x3 - self.position.x
-        self.secondAngle = customMath.getAngleFromX(dx,dy)
+        self.secondAngle = math.atan2(dy,dx)
 
 
 
-        '''print('r1 = %d' % r1)
-        print('r2 = %d' % r2)
-
-        a = r1+r2
-        print('a = %d' % a)
-
-        length = self.position.distanceTo(obsnode.position)
-        print('length = %d' % length)
-
-        theta1 = math.asin(a/length)
-        print('theta1 = %.3f' % theta1)
-
-        dy = obsnode.position.y - self.position.y
-        dx = obsnode.position.x - self.position.x
-
-        print('dy = %d' % dy)
-        print('dx = %d' % dx)
-
-        #angle based on dy and dx
-        theta2 = customMath.getAngleFromX(dx,dy)
-        print('theta2 = %.4f' % theta2)
-
-        theta3 = theta2 - theta1
-        print('theta3 = %.4f' % theta3)
-        self.secondAngle = math.pi / 2 * -1 * self.direction + theta3
-        print('secondAngle = %.4f' % self.secondAngle)
-
-        #create arrays for the ends of the tangent segment
-        flat = np.array([[0,length],[-r1,-r1]])
-        print(flat)
-        c = math.cos(theta3)
-        s = math.sin(theta3)
-        rotation = np.array([[c,-s],[s,c]])
-
-        translate = np.array([self.position.x,self.position.y])
-
-        coTanSegEnds = np.transpose(np.transpose(rotation@flat) + translate)
-        print(coTanSegEnds)
-        '''
 
 
         startPos = Position(x3,y3)
@@ -156,7 +117,7 @@ class ObstacleNode(NodeBase):
         for obs in obstacles:
             dx = obs.position.x - self.obstacle.position.x
             dy = obs.position.y - self.obstacle.position.y
-            obsAngle = customMath.getAngleFromX(dx,dy)
+            obsAngle = math.atan2(dy,dx)
             if self.firstAngle < self.secondAngle:
                 if self.direction == 1:
                     if obsAngle < self.secondAngle and obsAngle > self.firstAngle:

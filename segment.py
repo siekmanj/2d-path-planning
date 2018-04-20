@@ -46,23 +46,6 @@ class Segment:
         else:
             return minDistancePt
 
-    def closestIntersection(self,obstacles):
-        #This function searches through all of a list of obstacle classes, sorting them by how close they are to the startpos
-        #Then it find the first one with which there is a collision and returns the closes point along the segment
-        #as well as the obstacle of interest
-        returned = False
-        obstacle_list = obstacles
-        obstacle_list.sort(key=lambda obst: obst.distanceTo(self.startPos))
-        for obstacle in obstacles:
-            minDistancePt = self.minDistancePoint(obstacle.position)
-            if minDistancePt != 0:
-                if minDistancePt.distanceTo(obstacle.position) < obstacle.radius+3:
-
-                    return minDistancePt,obstacle
-                    returned = True
-                    break
-        if not returned:
-            return 0,0
 
     def getIntersectingObs(self,obstacles):
         # This function will iterate through all of the obstacles that are passed and will then find if there are any intersections with the obstacles, and if there are, it will return them
