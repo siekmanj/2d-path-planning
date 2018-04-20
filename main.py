@@ -3,9 +3,9 @@ import load_files
 import save_files
 import config
 import fieldgen
-import gravity
+
 import tanDjikstra
-import retiredalgorithms.fanpath
+
 
 from drawObstaclesPath import drawObstaclesPath
 

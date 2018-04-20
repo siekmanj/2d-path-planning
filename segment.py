@@ -149,35 +149,3 @@ class Segment:
             print('segment')
         return self.getIntersectingObs(obstacles) or self.getIntersectingSegs(segments,ignoreSegs)
 
-
-    def stretch(self,obstacles,buffer):
-        #This function stretches away from the closest intersection to the start of the segment
-        #returns two segments that comprise the stretched initial segment
-        closeIntersection, obstacleInterest = self.closestIntersection(obstacles)
-        if closeIntersection == 0:
-            return self,0
-        else:
-            distanceReqd = obstacleInterest.radius + buffer#Total distance to stretch outside of obstacle
-            currDist = closeIntersection.distanceTo(obstacleInterest.position)#How far from obstacle center it currentlyis
-            if currDist == 0:
-                print('uh oh')
-
-            #x and y distance of intersection from obstacle center respectively
-            dx = closeIntersection.x - obstacleInterest.position.x
-            dy = closeIntersection.y - obstacleInterest.position.y
-
-            #Scale to make it go outside of obstacle
-            dx *= distanceReqd / currDist
-            dy *= distanceReqd / currDist
-
-            middlePos = Position(obstacleInterest.position.x+dx,obstacleInterest.position.y+dy)
-
-            if middlePos.withinObstacles(obstacles):
-                middlePos = Position(obstacleInterest.position.x - dx, obstacleInterest.position.y - dy)
-                if middlePos.withinObstacles(obstacles):
-                    print('bummer outside current scope')
-
-            segment1 = Segment(self.startPos,middlePos)
-            segment2 = Segment(middlePos,self.endPos)
-
-            return segment1,segment2
