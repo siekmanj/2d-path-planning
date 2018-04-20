@@ -64,7 +64,7 @@ def getConcaveVertices(bound_segments):
             connectedSegs.append([i,i-1])
     #This returns the positions of the concave vertices in a list with another 2d array with the a pair of indices for
     #each corresponding to which bounding segments can be ignored when going through all of the
-    print(connectedSegs)
+    #print(connectedSegs)
     return concaveVertices,connectedSegs
 
 
