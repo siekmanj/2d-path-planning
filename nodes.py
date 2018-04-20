@@ -137,7 +137,7 @@ class ObstacleNode(NodeBase):
         #    angle_diff = 2*math.pi-angle_diff
 
         arcDistance  = self.radius*angle_diff
-        print(angle_diff)
+        #print(angle_diff)
         return abs(arcDistance)
 
     def getCircleIntersection(self,obstacles):
@@ -191,5 +191,3 @@ class ObstacleNode(NodeBase):
             distance += self.getArcDistance()
 
         return distance+self.pathDistance
-
-
