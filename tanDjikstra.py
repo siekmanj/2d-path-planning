@@ -174,7 +174,7 @@ def tangentDjikstra(waypoint_list,obstacle_list,bound_segements):
                             minDisNode.direction = nodes[i].direction
                             dx = nodes[i].segmentIn.endPos.x - nodes[i].position.x
                             dy = nodes[i].segmentIn.endPos.y - nodes[i].position.y
-                            nodes[i].firstAngle = customMath.getAngleFromX(dx, dy)
+                            nodes[i].firstAngle = math.atan2(dy,dx)
                         elif minDisNode.direction == nodes[i].direction:
                             nodes[i].firstAngle = minDisNode.secondAngle
                         else:

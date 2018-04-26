@@ -3,10 +3,7 @@ import load_files
 import save_files
 import config
 import fieldgen
-
 import tanDjikstra
-
-
 from drawObstaclesPath import drawObstaclesPath
 
 waypoint_list, obstacle_list, bound_segments = fieldgen.fieldGen(config.FIELD_WIDTH,
@@ -15,6 +12,14 @@ waypoint_list, obstacle_list, bound_segments = fieldgen.fieldGen(config.FIELD_WI
                                                  config.NUM_OBSTACLE,
                                                  config.NUM_WAYPOINTS,
                                                  config.NUM_BOUND_PTS)
+
+#*****I don't know how to put this in the config file, but should figure it out. Temporarily defined here
+fc = {"thrust":50,
+      "mass":4,
+      "density":1.225,
+      "cd":1,
+      "refarea":.25,
+      "veff": 14}#Flight characteristics of the drone
 
 paths = []  # append your paths to this list to draw them all at once (for comparison)
 realpath, allpaths, nonintersectingpath = tanDjikstra.tangentDjikstra(waypoint_list,obstacle_list,bound_segments)
