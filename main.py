@@ -8,6 +8,8 @@ import tanDjikstra
 
 
 from drawObstaclesPath import drawObstaclesPath
+from drawObstaclesPath import animate
+
 
 waypoint_list, obstacle_list, bound_segments = fieldgen.fieldGen(config.FIELD_WIDTH,
                                                  config.FIELD_HEIGHT,
@@ -28,4 +30,4 @@ paths.append(realpath)
 
 save_files.save_files(paths, waypoint_list, obstacle_list)
 # load_files.load_files()
-drawObstaclesPath(obstacle_list, paths, bound_segments, waypoint_list, config.FIELD_HEIGHT, config.FIELD_WIDTH)
+animate(obstacle_list, paths, bound_segments, waypoint_list, config.FIELD_HEIGHT, config.FIELD_WIDTH)

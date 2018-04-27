@@ -58,8 +58,8 @@ class Segment:
 
     def getIntersectingSegs(self,allsegments,ignoreSegs = None):
         segments = allsegments[:]
-        print('length segments')
-        print(len(segments))
+        #print('length segments')
+        #print(len(segments))
         if ignoreSegs != None:
             del segments[ignoreSegs[0]]
             del segments[ignoreSegs[1]]
@@ -126,9 +126,8 @@ class Segment:
         return False
 
     def getIntersecting(self,obstacles,segments,ignoreSegs = None):
-        if self.getIntersectingObs(obstacles):
-            print('obstacle')
-        if self.getIntersectingSegs(segments):
-            print('segment')
+        #if self.getIntersectingObs(obstacles):
+            #print('obstacle')
+        #if self.getIntersectingSegs(segments):
+            #print('segment')
         return self.getIntersectingObs(obstacles) or self.getIntersectingSegs(segments,ignoreSegs)
-

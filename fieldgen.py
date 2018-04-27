@@ -8,11 +8,11 @@ def fieldGen(width, height, guiInput, numObstacles, numWaypoints, numBoundPts):
     def obstacleGen:
     This is a function that will create the obstacles that will be used for path planning and if user input is selected,
     will allow the user to choose the starting and the ending waypoints
-    
+
     width: Width of the field in px
     height: Height of the field in px
     guiInput: Boolean of whether the user wants a gui input of the obstacles
-    numObstacles: Number of obstacles(only for random generation) 
+    numObstacles: Number of obstacles(only for random generation)
     '''
     # initialize an empty list
     obstacle_list = []
@@ -57,6 +57,10 @@ def fieldGen(width, height, guiInput, numObstacles, numWaypoints, numBoundPts):
         for i in range(numObstacles):
             radius = random.uniform(40, 50)
             pos = Position(random.uniform(0 + radius, width - radius), random.uniform(0 + radius, height - radius))
+            obst = Obstacle(pos, radius)
+            obst.xspd = random.uniform(-10, 10)
+            obst.yspd = random.uniform(-10, 10)
+            print("rand")
             obstacle_list.append(Obstacle(pos, radius))
 
     #Convert the bound_pts to bound_segments

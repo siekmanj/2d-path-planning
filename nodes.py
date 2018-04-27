@@ -40,9 +40,6 @@ class ObstacleNode(NodeBase):
         else:
             beta = math.asin((r2+r1)/length)
 
-
-
-
         if self.direction == -1:
             startAngle = math.pi/2
             if obsnode.direction == -1:
