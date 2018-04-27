@@ -4,6 +4,9 @@ import save_files
 import config
 import fieldgen
 import tanDjikstra
+import pathToPoints
+import ProfilePath
+import numpy as np
 from drawObstaclesPath import drawObstaclesPath
 
 waypoint_list, obstacle_list, bound_segments = fieldgen.fieldGen(config.FIELD_WIDTH,
@@ -34,3 +37,15 @@ paths.append(realpath)
 save_files.save_files(paths, waypoint_list, obstacle_list)
 # load_files.load_files()
 drawObstaclesPath(obstacle_list, paths, bound_segments, waypoint_list, config.FIELD_HEIGHT, config.FIELD_WIDTH)
+
+#-----------Motion Profiling Section--------------
+pathWaypoints = pathToPoints.pathToPoints(realpath)#Convert to simply the points
+
+#Eventually the powercurve will need to be some experimetnally obtained data
+pvf = np.linspace(0,100,100)
+
+powercurve = np.tile(pvf, (len(pvf),1))
+
+_,times,vprofile,points = ProfilePath.ProfilePath(pathWaypoints,fc,config.NUM_SPLINE_PTS,powercurve)
+
+

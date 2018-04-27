@@ -6,7 +6,7 @@ import scipy
 import interparc
 
 
-def ProfilePath(waypoints,fc,numPoints,draw,veff,powercurve):
+def ProfilePath(waypoints,fc,numPoints,powercurve):
     #GetEnergyPath: This function will calculate the amount of energy for a
     #given path
     #   Inputs:
@@ -38,11 +38,9 @@ def ProfilePath(waypoints,fc,numPoints,draw,veff,powercurve):
     #   9. Use Fthrust to solve for P(t) 
     #   10. Integrate P(t) over time interval of flight to get the energy used
     #   11. If draw then plot all of the info
-    
-    energyUsed = 0;
 
     #Step 1
-    pathPolys,arcParams,dr,r = InterpWaypoints(waypoints,numPoints);
+    pathPolys,arcParams,dr,r,points = InterpWaypoints(waypoints,numPoints);
 
     #Step 2
     radCurvature = GetRadCurvature(pathPolys,arcParams)
@@ -71,7 +69,7 @@ def ProfilePath(waypoints,fc,numPoints,draw,veff,powercurve):
     #Step 10
     energyUsed = GetEnergy(powers,times)
 
-    return energyUsed,times,vprofile
+    return energyUsed,times,vprofile,points
 
 
 def InterpWaypoints(waypoints,numPoints):
@@ -97,8 +95,8 @@ def InterpWaypoints(waypoints,numPoints):
     s = np.arange(numPoints)
     
     #Fit spline to initial arbitrary parameter
-    xPath = scipy.interpolate.CubicSpline(control_s, waypoints[1, :])
-    yPath = scipy.interpolate.CubicSpline(control_s, waypoints[2, :])
+    xPath = scipy.interpolate.CubicSpline(control_s, waypoints[0, :])
+    yPath = scipy.interpolate.CubicSpline(control_s, waypoints[1, :])
     pathPolys = [xPath,yPath]
     xs = xPath(s)
     ys = yPath(s)
@@ -108,12 +106,12 @@ def InterpWaypoints(waypoints,numPoints):
 
     #Definitely not the most efficient wey to do this since it is recalculating the spline, fit, but for now it is ok
     #Interpolate evenly spaced points along the spline
-    _, arcLengthParams = interparc.interparc(numPoints,xs,ys,'spline')
+    points, arcLengthParams = interparc.interparc(numPoints,xs,ys,'spline')
 
     #Rescale the arclength params from  1 to the whole distance of the path
     arcLengthParams *= distance
 
-    return pathPolys,arcLengthParams,dr,r
+    return pathPolys,arcLengthParams,dr,r,points
 
 def GetRadCurvature(pathPolys,arcParams):
     x = pathPolys[1](arcParams)
