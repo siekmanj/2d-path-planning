@@ -58,10 +58,10 @@ def fieldGen(width, height, guiInput, numObstacles, numWaypoints, numBoundPts):
             radius = random.uniform(40, 50)
             pos = Position(random.uniform(0 + radius, width - radius), random.uniform(0 + radius, height - radius))
             obst = Obstacle(pos, radius)
-            obst.xspd = random.uniform(-10, 10)
-            obst.yspd = random.uniform(-10, 10)
-            print("rand")
-            obstacle_list.append(Obstacle(pos, radius))
+            if(random.randint(0,4) == 0): #1/5 chance of object moving
+                obst.xspd = random.uniform(-2, 2)
+                obst.yspd = random.uniform(-2, 2)
+            obstacle_list.append(obst)
 
     #Convert the bound_pts to bound_segments
     for i in range(len(bound_pts),0,-1):

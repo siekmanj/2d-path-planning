@@ -27,18 +27,19 @@ def drawObstaclesPath(obstacles,paths,bound_segments,waypoint_list,height,width)
 
 def animate(obstacles, paths, bound_segments, waypoint_list, height, width):
     master = Tk()
-    w = Canvas(master, width=width, height=height)
-    w.pack()
+    global canvas
+    canvas = Canvas(master, width=width, height=height)
+    canvas.pack()
+    global canvas_item_list
     canvas_item_list = []
     for i in obstacles:
-        item = w.create_oval(i.position.x + i.radius, i.position.y + i.radius, i.position.x - i.radius, i.position.y - i.radius, fill="red")
+        item = canvas.create_oval(i.position.x + i.radius, i.position.y + i.radius, i.position.x - i.radius, i.position.y - i.radius, fill="red")
         canvas_item_list.append((i, item))
-    move_obstacles(w, canvas_item_list)
+    move_obstacles()
     mainloop()
 
-def move_obstacles(canvas, obstacle_list):
-    for i in obstacle_list:
-        i[0].position.x += i[0].xspd
-        i[0].position.y += i[0].yspd
-        canvas.move(i[1], i[0].position.x, i[0].position.y)
-    canvas.after(100, move_obstacles(canvas, obstacle_list))
+def move_obstacles():
+    for i in canvas_item_list:
+        i[0].step()
+        canvas.move(i[1], i[0].xspd, i[0].yspd)
+    canvas.after(100, move_obstacles)
