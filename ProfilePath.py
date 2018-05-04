@@ -4,6 +4,7 @@ import scipy.interpolate
 import scipy.misc
 import scipy
 import interparc
+import matplotlib.pyplot as plt
 
 
 def ProfilePath(waypoints,fc,numPoints,powercurve):
@@ -39,20 +40,26 @@ def ProfilePath(waypoints,fc,numPoints,powercurve):
     #   10. Integrate P(t) over time interval of flight to get the energy used
     #   11. If draw then plot all of the info
 
+    waypoints = waypoints/2
+
     #Step 1
     pathPolys,arcParams,dr,r,points = InterpWaypoints(waypoints,numPoints);
+    plt.plot(pathPolys[0](arcParams),pathPolys[1](arcParams))
 
     #Step 2
     radCurvature = GetRadCurvature(pathPolys,arcParams)
 
     #Step 3
     vmax = GetMaxVelocity(radCurvature,fc)
+    plt.plot(r,vmax)
 
     #Step 4
     vmax = BackAccCheck(vmax,fc,dr)
+    plt.plot(r,vmax)
 
     #Step 5
-    vprofile = ForwardAccCheck(vmax,fc,r,dr)
+    vprofile = ForwardAccCheck(vmax,fc,radCurvature,dr)
+    plt.plot(r,vprofile)
 
     #Step 6
     times = VelocitiesToTimes(vprofile,dr)
@@ -89,14 +96,19 @@ def InterpWaypoints(waypoints,numPoints):
     #   dr: The arc length step
     
     #Create the starting parameter values to correspond with x and y
-    control_s =  np.linspace(0,numPoints,len(waypoints))
+    control_s =  np.linspace(0,numPoints,waypoints.shape[1])
+    control_s = control_s.transpose()
     #Define array of the parameters that will be used in the spline
     #interpolation
     s = np.arange(numPoints)
-    
+    x = waypoints[0,:].transpose()
+    y = waypoints[1,:].transpose()
+    xshape = x.shape
+    yshape = y.shape
+    contrlshape = control_s.shape
     #Fit spline to initial arbitrary parameter
-    xPath = scipy.interpolate.CubicSpline(control_s, waypoints[0, :])
-    yPath = scipy.interpolate.CubicSpline(control_s, waypoints[1, :])
+    xPath = scipy.interpolate.PchipInterpolator(control_s, x)
+    yPath = scipy.interpolate.PchipInterpolator(control_s, y)
     pathPolys = [xPath,yPath]
     xs = xPath(s)
     ys = yPath(s)
@@ -106,24 +118,27 @@ def InterpWaypoints(waypoints,numPoints):
 
     #Definitely not the most efficient wey to do this since it is recalculating the spline, fit, but for now it is ok
     #Interpolate evenly spaced points along the spline
-    points, arcLengthParams = interparc.interparc(numPoints,xs,ys,'spline')
+    points, arcLengthParams = interparc.interparc(numPoints,xs,ys,'pcip')
 
     #Rescale the arclength params from  1 to the whole distance of the path
-    arcLengthParams *= distance
+
+    arcLengthParams = np.sort(arcLengthParams)
+
+    arcLengthParams = np.multiply(arcLengthParams, numPoints)
 
     return pathPolys,arcLengthParams,dr,r,points
 
 def GetRadCurvature(pathPolys,arcParams):
-    x = pathPolys[1](arcParams)
-    y = pathPolys[2](arcParams)
+    x = pathPolys[0](arcParams)
+    y = pathPolys[1](arcParams)
 
     #Take the first derivatives of the splines at the evenly spaced points by arc length
-    dx = scipy.misc.derivative(pathPolys[1], arcParams, n=1)
-    dy = scipy.misc.derivative(pathPolys[2], arcParams, n=1)
+    dx = scipy.misc.derivative(pathPolys[0], arcParams, n=1)
+    dy = scipy.misc.derivative(pathPolys[1], arcParams, n=1)
 
     # Take the second derivatives of the splines at the evenly spaced points by arc length
-    ddx = scipy.misc.derivative(pathPolys[1], arcParams, n=2)
-    ddy = scipy.misc.derivative(pathPolys[2], arcParams, n=2)
+    ddx = scipy.misc.derivative(pathPolys[0], arcParams, n=2)
+    ddy = scipy.misc.derivative(pathPolys[1], arcParams, n=2)
 
     #denominator of the k equation
     denomk = (dx ** 2 + dy ** 2) ** (3 / 2)
@@ -258,7 +273,7 @@ def VelocitiesToTimes(vprofile,dr):
     times = np.zeros(vprofile.size)
 
     for i in range(1,len(vprofile)):
-        times[k] = times[k-1] + dr * 1 / np.trapz(vprofile[i-1:i+1])
+        times[i] = times[i-1] + dr * 1 / np.trapz(vprofile[i-1:i+1])
 
     return times
 
@@ -285,7 +300,7 @@ def GetThrusts(radCurvature, vprofile, times, fc):
     #Iterate through the segments
     for i in range(len(vprofile)-1):
         a = (vprofile[i+1]-vprofile[i])/(times[i+1]-(times[i]))
-        fd = vprofile[i] ** 2 * fc["cd"] * fc["desnity"] * fc["refarea"] / 2
+        fd = vprofile[i] ** 2 * fc["cd"] * fc["density"] * fc["refarea"] / 2
         fcp = fc["mass"] * vprofile[i] ** 2 / radCurvature[i]; #Centripetal Force
 
         thrusts[i] = np.sqrt((fc["mass"] * a + fd) ** 2 + fcp ** 2 + (fc["mass"]*g) ** 2)
@@ -331,7 +346,9 @@ def NumericArcLength(xs,ys):
     arcLength = 0
 
     for i in range(0,len(xs)-1):
-        arcLength += np.linalg.norm(xs[i]-ys[i])
+        a = np.array((xs[i],ys[i]))
+        b = np.array((xs[i+1],ys[i+1]))
+        arcLength += np.linalg.norm(a-b)
 
     return arcLength
 

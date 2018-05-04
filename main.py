@@ -47,5 +47,3 @@ pvf = np.linspace(0,100,100)
 powercurve = np.tile(pvf, (len(pvf),1))
 
 _,times,vprofile,points = ProfilePath.ProfilePath(pathWaypoints,fc,config.NUM_SPLINE_PTS,powercurve)
-
-
