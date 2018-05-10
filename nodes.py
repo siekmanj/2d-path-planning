@@ -16,6 +16,9 @@ class ObstacleNode(NodeBase):
         super().__init__(obstacle.position,type)
         self.obstacle = obstacle
         self.radius = obstacle.radius
+        if self.type > 0:
+            #Add the buffer around all of the obstacles
+            self.radius += 5
         self.direction = direction#1: CCW -1:CW
         self.firstAngle = 0#Angle from the previous intersection on the surface of the circle measure positively from the +x axis
         self.secondAngle = 0#Angle from the next intersection on the surface of the circle measure positively from the +x axis
@@ -91,8 +94,10 @@ class ObstacleNode(NodeBase):
             self.secondAngle -= 2 * math.pi
         angle_diff = self.firstAngle - self.secondAngle
 
-        #if self.direction == -1:
-        #    angle_diff = 2*math.pi-angle_diff
+        if self.direction == 1 and (self.firstAngle > self.secondAngle):
+            angle_diff = 2*math.pi-angle_diff
+        elif self.direction == -1 and (self.firstAngle < self.secondAngle):
+            angle_diff = 2*math.pi+angle_diff
 
         arcDistance  = self.radius*angle_diff
         print(angle_diff)

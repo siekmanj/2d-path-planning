@@ -4,9 +4,8 @@ import save_files
 import config
 import fieldgen
 import tanDjikstra
-import pathToPoints
-import ProfilePath
-import numpy as np
+import planPath
+
 from drawObstaclesPath import drawObstaclesPath
 
 waypoint_list, obstacle_list, bound_segments = fieldgen.fieldGen(config.FIELD_WIDTH,
@@ -17,13 +16,14 @@ waypoint_list, obstacle_list, bound_segments = fieldgen.fieldGen(config.FIELD_WI
                                                  config.NUM_BOUND_PTS)
 
 #*****I don't know how to put this in the config file, but should figure it out. Temporarily defined here
-fc = {"thrust":50,
+fc = {"thrust":100,
       "mass":4,
       "density":1.225,
       "cd":1,
       "refarea":.25,
       "veff": 14}#Flight characteristics of the drone
 
+# STATIC OBSTACLE PRINTING
 paths = []  # append your paths to this list to draw them all at once (for comparison)
 realpath, allpaths, nonintersectingpath = tanDjikstra.tangentDjikstra(waypoint_list,obstacle_list,bound_segments)
 #paths.append(allpaths)
@@ -38,12 +38,7 @@ save_files.save_files(paths, waypoint_list, obstacle_list)
 # load_files.load_files()
 drawObstaclesPath(obstacle_list, paths, bound_segments, waypoint_list, config.FIELD_HEIGHT, config.FIELD_WIDTH)
 
-#-----------Motion Profiling Section--------------
-pathWaypoints = pathToPoints.pathToPoints(realpath)#Convert to simply the points
+# ANIMATION/MOVING OBSTACLE PRINTING
 
-#Eventually the powercurve will need to be some experimetnally obtained data
-pvf = np.linspace(0,100,100)
+posTimes = planPath.planPath('tandji',obstacle_list,waypoint_list[1:],bound_segments,waypoint_list[0],fc,config)
 
-powercurve = np.tile(pvf, (len(pvf),1))
-
-_,times,vprofile,points = ProfilePath.ProfilePath(pathWaypoints,fc,config.NUM_SPLINE_PTS,powercurve)

@@ -79,12 +79,107 @@ def posToObstacleNodes(positions,connectedSegs):
 
     return obstacleNodes
 
+def nodesToPath(nodes):
+    #This function will take the nodes in and will then calculate smaller segmented paths.
+
+    #How many segments per one cotangent segment
+    numSegsPerStraight = 4
+    numAngleStepsPerCircle = 500
+    approximateAngleStep = 2*math.pi/numAngleStepsPerCircle
+
+    path = []
+
+    # Append all of the segments to the path
+    currentNode = len(nodes) - 1
+    # path = []
+    while currentNode != 0:
+        currentSegment = nodes[currentNode].segmentIn
+        startX = currentSegment.startPos.x
+        startY = currentSegment.startPos.y
+        endX = currentSegment.endPos.x
+        endY = currentSegment.endPos.y
+
+        #Change in x,y between each of the spaced out segments
+        dx = (endX-startX)/(numSegsPerStraight)
+        dy = (endY-startY)/(numSegsPerStraight)
+
+        #Split up the current segment into numSegsPerStraight
+        for i in range(0,numSegsPerStraight):
+            #Create the current segment
+            smallerStart = Position(endX-dx*(i+1),endY-dy*(i+1))
+            smallerEnd = Position(endX-dx*i,endY-dy*i)
+
+            smallerSegment = Segment(smallerStart,smallerEnd)
+
+            path.append(smallerSegment)
+
+        parentNode = nodes[nodes[currentNode].parent]
+        #Add the curvy part of the segment
+        if parentNode.type > 0:
+            #The curvy part will need to be added
+
+            dx = parentNode.segmentIn.endPos.x - parentNode.position.x
+            dy = parentNode.segmentIn.endPos.y - parentNode.position.y
+            parentNode.firstAngle = math.atan2(dy, dx)
+
+            dx = nodes[currentNode].segmentIn.startPos.x - parentNode.position.x
+            dy = nodes[currentNode].segmentIn.startPos.y - parentNode.position.y
+            parentNode.secondAngle = math.atan2(dy, dx)
+
+            #All of the angles should be normalized between 0 and 2pi
+            if parentNode.firstAngle < 0:
+                parentNode.firstAngle += 2 * math.pi
+            elif parentNode.firstAngle > 2 * math.pi:
+                parentNode.firstAngle -= 2 * math.pi
+
+            if parentNode.secondAngle < 0:
+                parentNode.secondAngle += 2 * math.pi
+            elif parentNode.secondAngle > 2 * math.pi:
+                parentNode.secondAngle -= 2 * math.pi
+
+            #Direection 1 = CCW(+ angles) -1 = CW(- angles)
+            if parentNode.direction == 1:
+                #If the direction is CCW
+                if parentNode.secondAngle < parentNode.firstAngle:
+                    #If the second angle is smaller make it bigger so that the angle can be correctly calculated
+                    parentNode.secondAngle = parentNode.secondAngle + math.pi*2
+
+
+            elif parentNode.direction == -1:
+                if parentNode.secondAngle > parentNode.firstAngle:
+                    parentNode.secondAngle = parentNode.secondAngle - math.pi*2
+
+            angle_diff = parentNode.secondAngle - parentNode.firstAngle
+            numRadiusSegments = abs(math.floor(angle_diff / approximateAngleStep))
+            angleStep = angle_diff / numRadiusSegments
+
+            #Loop to actually create the segments
+            for i in range(0,numRadiusSegments):
+                #Create the current start and finish x and y values for the individual arc segment
+                startAngle = parentNode.secondAngle - angleStep * (i+1)
+                endAngle = parentNode.secondAngle - angleStep * i
+                radStartX = parentNode.position.x + parentNode.radius*math.cos(startAngle)
+                radStartY = parentNode.position.y + parentNode.radius*math.sin(startAngle)
+                radEndX = parentNode.position.x + parentNode.radius*math.cos(endAngle)
+                radEndY = parentNode.position.y + parentNode.radius*math.sin(endAngle)
+                radStartPos = Position(radStartX,radStartY)
+                radEndPos = Position(radEndX,radEndY)
+                radSegment = Segment(radStartPos,radEndPos)
+                path.append(radSegment)
+
+
+
+
+        currentNode = nodes[currentNode].parent
+
+    return path
+
+
 def tangentDjikstra(waypoint_list,obstacle_list,bound_segements):
 
     nodes = initialize_nodes(waypoint_list,obstacle_list,bound_segements)
 
     # Iterate through the process until the final node is known
-    path = []
     allpath = []
     nonintersectingpath =[]
     while not nodes[-1].known:
@@ -180,11 +275,6 @@ def tangentDjikstra(waypoint_list,obstacle_list,bound_segements):
                         else:
                             nodes[i].firstAngle = minDisNode.secondAngle+math.pi
 
-    #Append all of the segments to the path
-    currentNode = len(nodes) - 1
-    #path = []
-    while currentNode != 0:
-        path.append(nodes[currentNode].segmentIn)
-        currentNode = nodes[currentNode].parent
+    path = nodesToPath(nodes)
 
     return path,allpath,nonintersectingpath

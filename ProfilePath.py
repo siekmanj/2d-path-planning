@@ -5,6 +5,7 @@ import scipy.misc
 import scipy
 import interparc
 import matplotlib.pyplot as plt
+import math
 
 
 def ProfilePath(waypoints,fc,numPoints,powercurve):
@@ -40,26 +41,31 @@ def ProfilePath(waypoints,fc,numPoints,powercurve):
     #   10. Integrate P(t) over time interval of flight to get the energy used
     #   11. If draw then plot all of the info
 
-    waypoints = waypoints/2
+    #Scale the field from px to meters
+    waypoints = waypoints/10
 
     #Step 1
     pathPolys,arcParams,dr,r,points = InterpWaypoints(waypoints,numPoints);
-    plt.plot(pathPolys[0](arcParams),pathPolys[1](arcParams))
+    #plt.plot(pathPolys[0](arcParams),pathPolys[1](arcParams))
+    #plt.plot(arcParams,pathPolys[0](arcParams))
+    x = points[:,0]
+    y = points[:,1]
+    plt.plot(x,y,'.b')
 
     #Step 2
-    radCurvature = GetRadCurvature(pathPolys,arcParams)
-
+    radCurvature = GetRadCurvature(x,y)
+    #plt.plot(np.linspace(0,700,len(radCurvature)),radCurvature)
     #Step 3
     vmax = GetMaxVelocity(radCurvature,fc)
-    plt.plot(r,vmax)
+    plt.plot(np.linspace(0,700,len(vmax)),vmax)
 
     #Step 4
     vmax = BackAccCheck(vmax,fc,dr)
-    plt.plot(r,vmax)
+    plt.plot(np.linspace(0,700,len(vmax)),vmax)
 
     #Step 5
     vprofile = ForwardAccCheck(vmax,fc,radCurvature,dr)
-    plt.plot(r,vprofile)
+    plt.plot(np.linspace(0,700,len(vmax)),vprofile)
 
     #Step 6
     times = VelocitiesToTimes(vprofile,dr)
@@ -69,6 +75,7 @@ def ProfilePath(waypoints,fc,numPoints,powercurve):
 
     #Step 8
     thrusts = GetThrusts(radCurvature,vprofile,times,fc)
+    plt.plot(np.linspace(0,700,len(radCurvature)-1),thrusts)
 
     #Step 9
     powers = GetPower(thrusts,powercurve,vprofile)
@@ -118,7 +125,7 @@ def InterpWaypoints(waypoints,numPoints):
 
     #Definitely not the most efficient wey to do this since it is recalculating the spline, fit, but for now it is ok
     #Interpolate evenly spaced points along the spline
-    points, arcLengthParams = interparc.interparc(numPoints,xs,ys,'pcip')
+    points, arcLengthParams = interparc.interparc(numPoints,x,y,'linear')
 
     #Rescale the arclength params from  1 to the whole distance of the path
 
@@ -128,29 +135,35 @@ def InterpWaypoints(waypoints,numPoints):
 
     return pathPolys,arcLengthParams,dr,r,points
 
-def GetRadCurvature(pathPolys,arcParams):
-    x = pathPolys[0](arcParams)
-    y = pathPolys[1](arcParams)
+def GetRadCurvature(x,y):
 
     #Take the first derivatives of the splines at the evenly spaced points by arc length
-    dx = scipy.misc.derivative(pathPolys[0], arcParams, n=1)
-    dy = scipy.misc.derivative(pathPolys[1], arcParams, n=1)
+    dx = np.diff(x)
+    dy = np.diff(y)
+    dx = np.append(dx, dx[-1])
+    dy = np.append(dy, dy[-1])
 
+    plt.plot(np.linspace(0, 700, len(dx)), dx)
+    plt.plot(np.linspace(0, 700, len(dy)), dy)
     # Take the second derivatives of the splines at the evenly spaced points by arc length
-    ddx = scipy.misc.derivative(pathPolys[0], arcParams, n=2)
-    ddy = scipy.misc.derivative(pathPolys[1], arcParams, n=2)
+    ddx = np.diff(dx)
+    ddy = np.diff(dy)
+    ddx = np.append(ddx, ddx[-1])
+    ddy = np.append(ddy, ddy[-1])
+    plt.plot(np.linspace(0, 700, len(ddx)), ddx)
+    plt.plot(np.linspace(0, 700, len(ddy)), ddy)
+
 
     #denominator of the k equation
-    denomk = (dx ** 2 + dy ** 2) ** (3 / 2)
-    denomk[denomk == 0] = .00001
 
-    k = (abs(dx * ddy - ddx * dy)) / denomk
+    k = (abs(dx * ddy - ddx * dy)) / ((dx ** 2 + dy ** 2) ** (3 / 2))
     #Make sure that there are not any 0 values left
-    k[k == 1] = .00001
+    k[k == 0] = .00001
 
     #Calculate the radius of curvature
     radCurvature = 1/k
 
+    radCurvature[radCurvature > 100000] = 100000
     return radCurvature
 
 def GetMaxVelocity(radCurvature, fc):
@@ -177,6 +190,8 @@ def GetMaxVelocity(radCurvature, fc):
 
     #Calculate the maximum horizontal force that the copter can supply while maintaining altitude disregarding any lift
     fMaxHoriz = fc["thrust"]*np.cos(np.arcsin(fc["mass"]*g/fc["thrust"]))
+    #Put a buffer to create nan protection in forwawrd acc check
+    fMaxHoriz = fMaxHoriz*.90
 
     vmax = np.sqrt(fMaxHoriz*radCurvature/fc["mass"])
     return vmax
@@ -246,6 +261,8 @@ def ForwardAccCheck(vmax,fc,r,dr):
     for i in range(len(vmax)-1):
         amax = (np.sqrt(fMaxHoriz ** 2 - (fc["mass"] * vprofile[i] ** 2 / r[i]) ** 2) - fc["cd"] * vprofile[i] ** 2 * fc["density"] * fc["refarea"] / 2) / fc["mass"]
         vnext = np.sqrt(vprofile[i] ** 2 + 2 * amax * dr)
+        if math.isnan(amax) or math.isnan(vnext):
+            print('We have  an issue')
 
         #The actual value of the speed for that point should be the minimum out of the following 3 options
         vprofile[i + 1] = np.min(np.array((vnext,fc["veff"],vmax[i+1])))
@@ -323,7 +340,16 @@ def GetPower(thrusts,powercurve,vprofile):
     # Output
     #   powers: An array of the same length as thrusts outlining the amount of
     #   power used at each time interval
-    powers = scipy.interpolate.interp2d(powercurve, thrusts + 1, vprofile[1:-1]+1)
+    '''vpoints = np.linspace(0,100,len(powercurve));
+    tpoints = np.linspace(0,110,len(powercurve));
+    points = np.ones((len(powercurve),2))
+    points[:,0] = vpoints
+    points[:,1] = tpoints
+
+    powers = scipy.interpolate.griddata(points,powercurve,(thrusts + 1, vprofile[0:-1]+1))
+    '''
+    #temporary until grid interpolation works
+    powers = thrusts*2
 
     return powers
 
@@ -338,7 +364,7 @@ def GetEnergy(powers,times):
     # Output
     #   energyUsed: This is the total approximated energy to fly the course
 
-    energyUsed = np.trapz(times[0:-1],powers)
+    energyUsed = np.trapz(powers,times[0:-1])
 
     return energyUsed
 
