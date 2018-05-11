@@ -76,6 +76,7 @@ def ProfilePath(waypoints,fc,numPoints,powercurve):
     #Step 8
     thrusts = GetThrusts(radCurvature,vprofile,times,fc)
     plt.plot(np.linspace(0,700,len(radCurvature)-1),thrusts)
+    plt.figlegend('test')
 
     #Step 9
     powers = GetPower(thrusts,powercurve,vprofile)
