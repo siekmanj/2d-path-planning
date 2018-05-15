@@ -94,7 +94,7 @@ end
 %vals
 
 %Step 8
-thrusts = GetThrusts(radCurvature_r,vprofile,times,fc,powercurve);
+thrusts = GetThrusts(radCurvature_r,vprofile,times,fc);
 if draw
     figure
     plot(times(1:end-1),thrusts,'-g')

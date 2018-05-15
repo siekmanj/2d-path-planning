@@ -12,7 +12,7 @@ function [vprofile] = ForwardAccCheck(vmax,veff,fc,r,dr)
 %   veff: This is the pre-calculated most efficient speed
 %   fc: A struct with the following atrributes
 %       -thrust: Thrust in N
-%       -mass: Mass of copter in kg
+%       -mass: Mass of copter   in kg
 %       -density: Density of air in kg/m^3
 %       -cd: Coefficient of drag for copter
 %       -refarea: Drag reference area

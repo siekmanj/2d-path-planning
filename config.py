@@ -10,6 +10,7 @@ FIELD_HEIGHT = int(cfg['general']['FieldHeight'])
 NUM_WAYPOINTS = int(cfg['general']['NumWaypoints'])
 NUM_OBSTACLE = int(cfg['general']['NumObstacles'])
 NUM_BOUND_PTS = int(cfg['general']['NumBoundPoints'])#This should not be smaller than 3
+NUM_SPLINE_PTS = int(cfg['general']['NumSplinePoints'])
 SHOW_RUBBER_STEPS = cfg['rubberpath'].getboolean('UseRubberSteps')
 USE_GUI = cfg['fieldGen'].getboolean('UseGUI') #Whether to enable the gui
 
