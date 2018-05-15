@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import math
 
 
-def ProfilePath(waypoints,fc,numPoints,powercurve):
+def ProfilePath(waypoints,fc,numPoints,powercurve,scale):
     #GetEnergyPath: This function will calculate the amount of energy for a
     #given path
     #   Inputs:
@@ -41,8 +41,8 @@ def ProfilePath(waypoints,fc,numPoints,powercurve):
     #   10. Integrate P(t) over time interval of flight to get the energy used
     #   11. If draw then plot all of the info
 
-    #Scale the field from px to meters
-    waypoints = waypoints/10
+    #Convert From Px to meters
+    waypoints = waypoints * scale
 
     #Step 1
     pathPolys,arcParams,dr,r,points = InterpWaypoints(waypoints,numPoints);

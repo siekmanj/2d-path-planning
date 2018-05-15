@@ -14,7 +14,8 @@ waypoint_list, obstacle_list, bound_segments = fieldgen.fieldGen(config.FIELD_WI
                                                  config.USE_GUI,
                                                  config.NUM_OBSTACLE,
                                                  config.NUM_WAYPOINTS,
-                                                 config.NUM_BOUND_PTS)
+                                                 config.NUM_BOUND_PTS,
+                                                 config.FILENAME_MAPIMAGE)
 
 #*****I don't know how to put this in the config file, but should figure it out. Temporarily defined here
 fc = {"thrust":100,
@@ -37,7 +38,7 @@ paths.append(realpath)
 
 save_files.save_files(paths, waypoint_list, obstacle_list)
 # load_files.load_files()
-drawObstaclesPath(obstacle_list, paths, bound_segments, waypoint_list, config.FIELD_HEIGHT, config.FIELD_WIDTH)
+drawObstaclesPath(obstacle_list, paths, bound_segments, waypoint_list, config.FIELD_HEIGHT, config.FIELD_WIDTH,config.FILENAME_MAPIMAGE)
 
 # ANIMATION/MOVING OBSTACLE PRINTING
 

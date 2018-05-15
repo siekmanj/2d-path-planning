@@ -3,7 +3,8 @@ from boundingSegment import *
 import random
 
 
-def fieldGen(width, height, guiInput, numObstacles, numWaypoints, numBoundPts):
+
+def fieldGen(width, height, guiInput, numObstacles, numWaypoints, numBoundPts,mapFilename):
     '''
     def obstacleGen:
     This is a function that will create the obstacles that will be used for path planning and if user input is selected,
@@ -28,7 +29,9 @@ def fieldGen(width, height, guiInput, numObstacles, numWaypoints, numBoundPts):
         '''
         # Create tkinter canvas
         root = Tk()
-        window = ObstacleCanvas(root, numWaypoints, numBoundPts, width=width, height=height)
+        root.attributes('-fullscreen', True)
+        window = ObstacleCanvas(root, numWaypoints, numBoundPts, mapFilename, width=width, height=height)
+
         window.pack()
 
         def endgui(event):
@@ -44,6 +47,8 @@ def fieldGen(width, height, guiInput, numObstacles, numWaypoints, numBoundPts):
 
         root.bind("q", endgui)
 
+        print(root.winfo_screenwidth())
+        print(root.winfo_screenheight())
         root.mainloop()
 
 

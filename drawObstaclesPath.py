@@ -1,6 +1,7 @@
 from tkinter import *
+import tkinter as tk
 
-def drawObstaclesPath(obstacles,paths,bound_segments,waypoint_list,height,width):
+def drawObstaclesPath(obstacles,paths,bound_segments,waypoint_list,height,width,mapFilename):
     #This is a function that will draw all of the obstacles in the obstacle list and the segments of the path
 
     # visualization stuff
@@ -8,6 +9,10 @@ def drawObstaclesPath(obstacles,paths,bound_segments,waypoint_list,height,width)
     w = Canvas(master, width=width, height=height)
     w.pack()
 
+    filename = PhotoImage(
+        file=mapFilename)
+
+    w.create_image(0, 0, image=filename, anchor=tk.NW)
     # draw the obstacles on the canvas
     for i in obstacles:
         w.create_oval(i.position.x + i.radius, i.position.y + i.radius, i.position.x - i.radius,
