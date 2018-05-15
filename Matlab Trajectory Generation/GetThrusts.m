@@ -1,4 +1,4 @@
-function [thrusts] = GetThrusts(radCurvature,vprofile,times,fc,powercurve)
+function [thrusts] = GetThrusts(radCurvature,vprofile,times,fc)
 %GETTHRUSTS This function will take in arrays with the velocity profile as
 %well as the radius of curvature at each of the given points. Then it takes
 %this data and will calculate the needed horizontal 2d force that is
