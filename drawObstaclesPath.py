@@ -6,8 +6,13 @@ def drawObstaclesPath(obstacles,paths,bound_segments,waypoint_list,height,width,
 
     # visualization stuff
     master = Tk()
+    master.attributes('-fullscreen', True)
+
+
+
     w = Canvas(master, width=width, height=height)
     w.pack()
+
 
     filename = PhotoImage(
         file=mapFilename)
@@ -28,5 +33,12 @@ def drawObstaclesPath(obstacles,paths,bound_segments,waypoint_list,height,width,
 
     for segment in bound_segments:
         w.create_line(segment.startPos.x, segment.startPos.y, segment.endPos.x, segment.endPos.y, fill='red')
-    mainloop()
+
+
+    def closeWindow(event):
+        master.destroy()
+
+    master.bind("w", closeWindow)
+
+    master.mainloop()
 

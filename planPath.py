@@ -26,8 +26,8 @@ def planPath(algorithm,obstacle_list,waypoint_list,bound_segments,curr_pos,fc,co
     #Rescale the points to the GPS Scale
 
     posTimes = np.zeros((4,len(points)))
-    posTimes[0,:] = config.TOP_LATITUDE + (config.HEIGHT_LATITUDE/config.HEIGHT_METERS)*points[:,0]
-    posTimes[1,:] = config.LEFT_LONGITUDE + (config.WIDTH_LONGITUDE/config.WIDTH_METERS)*points[:,1]
+    posTimes[0,:] = config.LEFT_LONGITUDE - (config.WIDTH_LONGITUDE/config.WIDTH_METERS)*points[:,0]
+    posTimes[1,:] = config.TOP_LATITUDE - (config.HEIGHT_LATITUDE/config.HEIGHT_METERS)*points[:,1]
     posTimes[2,:] = vprofile
     posTimes[3,:] = times
     return posTimes

@@ -47,8 +47,6 @@ def fieldGen(width, height, guiInput, numObstacles, numWaypoints, numBoundPts,ma
 
         root.bind("q", endgui)
 
-        print(root.winfo_screenwidth())
-        print(root.winfo_screenheight())
         root.mainloop()
 
 
