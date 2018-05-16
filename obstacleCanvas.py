@@ -1,11 +1,14 @@
 from tkinter import *
+import tkinter as tk
 from position import *
 from obstacle import *
 
 
 class ObstacleCanvas(Canvas):
-    def __init__(self, root, numWaypoints, numBoundPts, width, height):
+    def __init__(self, root, numWaypoints, numBoundPts, mapFilename, width, height):
         Canvas.__init__(self, root, width=width, height=height)
+
+
 
         self.root = root
 
@@ -25,6 +28,13 @@ class ObstacleCanvas(Canvas):
         self.defaultRad = 5  # Default radius for waypoints and picking obstacle centers
 
         self.mousePos = Position(0, 0)  # Default initialization
+        # Set the background image
+        # Add the background picture:
+        self.filename = PhotoImage(
+            file=mapFilename)
+
+        self.backImage = self.create_image(0,0,image = self.filename, anchor = tk.NW)
+
 
         # Bind actions to events
         self.bind("<Button-1>", self.onClick)
@@ -51,6 +61,7 @@ class ObstacleCanvas(Canvas):
         if len(self.bound_pts) < self.numBoundPts:
             # Still in the boundary creation stage
             # set the next waypoint
+
             self.bound_pts.append(Position(self.mousePos.x, self.mousePos.y))
             if len(self.bound_pts) > 1:
                 self.boundaryLines[-1] = self.create_line(self.bound_pts[-2].x,
@@ -82,7 +93,7 @@ class ObstacleCanvas(Canvas):
 
                 # define the corners of the ellipse bounding box
                 x0, y0, x1, y1 = self.circleBounding(self.mousePos, self.defaultRad)
-                self.obstacleCirles.append(self.create_oval(x0, y0, x1, y1, outline='orange', width=2))
+                self.obstacleCirles.append(self.create_oval(x0, y0, x1, y1, outline='orange', width=3))
             else:
                 # Placing center of the obstacle
                 self.obstacles.append(Obstacle(Position(self.mousePos.x, self.mousePos.y), 0))
@@ -120,7 +131,7 @@ class ObstacleCanvas(Canvas):
 
                 x0, y0, x1, y1 = self.circleBounding(self.obstacles[-1].position, tempRad)
                 self.delete(self.obstacleCirles[-1])
-                self.obstacleCirles[-1] = self.create_oval(x0, y0, x1, y1, outline='green', width=2)
+                self.obstacleCirles[-1] = self.create_oval(x0, y0, x1, y1,outline='yellow', width=4 )
             else:
                 x0, y0, x1, y1 = self.circleBounding(self.mousePos, self.defaultRad)
                 self.delete(self.obstacleCirles[-1])

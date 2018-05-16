@@ -21,10 +21,13 @@ def planPath(algorithm,obstacle_list,waypoint_list,bound_segments,curr_pos,fc,co
 
     powercurve = np.tile(pvf, (len(pvf),1))
 
-    _,times,vprofile,points = ProfilePath.ProfilePath(pathWaypoints,fc,config.NUM_SPLINE_PTS,powercurve)
+    _,times,vprofile,points = ProfilePath.ProfilePath(pathWaypoints,fc,config.NUM_SPLINE_PTS,powercurve,config.SCALE_FACTOR)
 
-    posTimes = np.zeros((3,len(points)))
-    posTimes[0,:] = points[:,0]
-    posTimes[1,:] = points[:,1]
-    posTimes[2,:] = times
+    #Rescale the points to the GPS Scale
+
+    posTimes = np.zeros((4,len(points)))
+    posTimes[0,:] = config.LEFT_LONGITUDE - (config.WIDTH_LONGITUDE/config.WIDTH_METERS)*points[:,0]
+    posTimes[1,:] = config.TOP_LATITUDE - (config.HEIGHT_LATITUDE/config.HEIGHT_METERS)*points[:,1]
+    posTimes[2,:] = vprofile
+    posTimes[3,:] = times
     return posTimes
