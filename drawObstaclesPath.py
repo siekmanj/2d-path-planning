@@ -1,12 +1,13 @@
 from tkinter import *
 import tkinter as tk
+from time import sleep
 
 def drawObstaclesPath(obstacles,paths,bound_segments,waypoint_list,height,width,mapFilename):
     #This is a function that will draw all of the obstacles in the obstacle list and the segments of the path
 
     # visualization stuff
     master = Tk()
-    master.attributes('-fullscreen', True)
+    master.attributes('-fullscreen', False)
 
 
 
@@ -30,6 +31,8 @@ def drawObstaclesPath(obstacles,paths,bound_segments,waypoint_list,height,width,
     for i in range(len(paths)):
         for segment in paths[i]:
             w.create_line(segment.startPos.x, segment.startPos.y, segment.endPos.x, segment.endPos.y,fill=colors[i],width = 5)
+            master.update()
+            sleep(0.1)
 
     for segment in bound_segments:
         w.create_line(segment.startPos.x, segment.startPos.y, segment.endPos.x, segment.endPos.y, fill='red')
@@ -40,5 +43,9 @@ def drawObstaclesPath(obstacles,paths,bound_segments,waypoint_list,height,width,
 
     master.bind("w", closeWindow)
 
-    master.mainloop()
+    #master.mainloop()
+
+    #while True:
+    #    master.update()
+    #    sleep(1)
 
