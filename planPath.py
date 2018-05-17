@@ -9,6 +9,7 @@ def planPath(algorithm,obstacle_list,waypoint_list,bound_segments,curr_pos,fc,co
     #switch statement for the algorithms
     if algorithm == 'tandji':
         #Tangent Djikstra
+	#why is tangentDjikstra called again here? Shouldn't we just pass realpath from the previous invocation?
         realpath, _,_ = tanDjikstra.tangentDjikstra(waypoint_list, obstacle_list, bound_segments)
     else:
         print('That was not one of the options given so the default will be used')

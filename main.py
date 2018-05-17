@@ -8,6 +8,7 @@ import planPath
 import numpy as np
 
 from drawObstaclesPath import drawObstaclesPath
+from drawObstaclesPathAnimated import drawObstaclesPathAnimated
 
 waypoint_list, obstacle_list, bound_segments = fieldgen.fieldGen(config.FIELD_WIDTH,
                                                  config.FIELD_HEIGHT,
@@ -37,13 +38,14 @@ paths.append(realpath)
 #paths.append(gravity.simplegravity(obstacle_list, waypoint_list, config.FIELD_HEIGHT, config.FIELD_WIDTH))
 
 
-save_files.save_files(paths, waypoint_list, obstacle_list)
+#save_files.save_files(paths, waypoint_list, obstacle_list)
 # load_files.load_files()
-drawObstaclesPath(obstacle_list, paths, bound_segments, waypoint_list, config.FIELD_HEIGHT, config.FIELD_WIDTH,config.FILENAME_MAPIMAGE)
+#drawObstaclesPath(obstacle_list, paths, bound_segments, waypoint_list, config.FIELD_HEIGHT, config.FIELD_WIDTH,config.FILENAME_MAPIMAGE)
 
 # ANIMATION/MOVING OBSTACLE PRINTING
 
 posTimes = planPath.planPath('tandji',obstacle_list,waypoint_list[1:],bound_segments,waypoint_list[0],fc,config)
+drawObstaclesPathAnimated(obstacle_list, paths, bound_segments, waypoint_list, config.FIELD_HEIGHT, config.FIELD_WIDTH,config.FILENAME_MAPIMAGE,posTimes)
 
 #Save the positions and the times to a csv file
 np.savetxt('AerialPath.csv',posTimes,delimiter=',')

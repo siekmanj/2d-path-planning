@@ -29,7 +29,7 @@ def fieldGen(width, height, guiInput, numObstacles, numWaypoints, numBoundPts,ma
         '''
         # Create tkinter canvas
         root = Tk()
-        root.attributes('-fullscreen', True)
+        root.attributes('-fullscreen', False)
         window = ObstacleCanvas(root, numWaypoints, numBoundPts, mapFilename, width=width, height=height)
 
         window.pack()

@@ -43,7 +43,8 @@ def drawObstaclesPath(obstacles,paths,bound_segments,waypoint_list,height,width,
 
     master.bind("w", closeWindow)
 
-    #master.mainloop()
+    #mainloop is still needed because it blocks the window from closing
+    master.mainloop()
 
     #while True:
     #    master.update()
