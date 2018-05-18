@@ -45,7 +45,7 @@ paths.append(realpath)
 # ANIMATION/MOVING OBSTACLE PRINTING
 
 posTimes = planPath.planPath('tandji',obstacle_list,waypoint_list[1:],bound_segments,waypoint_list[0],fc,config)
-drawObstaclesPathAnimated(obstacle_list, paths, bound_segments, waypoint_list, config.FIELD_HEIGHT, config.FIELD_WIDTH,config.FILENAME_MAPIMAGE,posTimes)
+drawObstaclesPathAnimated(obstacle_list, paths, bound_segments, waypoint_list, config.FIELD_HEIGHT, config.FIELD_WIDTH, config.FILENAME_MAPIMAGE, posTimes,config.HEIGHT_LATITUDE, config.WIDTH_LONGITUDE, config.TOP_LATITUDE, config.LEFT_LONGITUDE)
 
 #Save the positions and the times to a csv file
 np.savetxt('AerialPath.csv',posTimes,delimiter=',')
