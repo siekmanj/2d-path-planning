@@ -17,7 +17,7 @@ waypoint_list, obstacle_list, bound_segments = fieldgen.fieldGen(config.FIELD_WI
                                                  config.NUM_BOUND_PTS,
                                                  config.FILENAME_MAPIMAGE)
 
-#*****I don't know how to put this in the config file, but should figure it out. Temporarily defined herewwwqwqqwqqqwwqqqqqqww
+#*****I don't know how to put this in the config file, but should figure it out. Temporarily defined here
 fc = {"thrust":100,
       "mass":4,
       "density":1.225,
