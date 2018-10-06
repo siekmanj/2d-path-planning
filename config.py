@@ -13,6 +13,8 @@ NUM_WAYPOINTS = int(cfg['general']['NumWaypoints'])
 NUM_OBSTACLE = int(cfg['general']['NumObstacles'])
 NUM_BOUND_PTS = int(cfg['general']['NumBoundPoints'])#This should not be smaller than 3
 NUM_SPLINE_PTS = int(cfg['general']['NumSplinePoints'])
+AUTO_EXIT = cfg['general'].getboolean('AutoExit')
+AUTO_EXIT_TIME_MS = int(cfg['general']['AutoExitTimeMS'])
 SHOW_RUBBER_STEPS = cfg['rubberpath'].getboolean('UseRubberSteps')
 USE_GUI = cfg['fieldGen'].getboolean('UseGUI') #Whether to enable the gui
 USE_IMAGE_SIZE = cfg['fieldGen'].getboolean('UseImageSize') #Whether to use Image for sizing the screen
@@ -26,6 +28,7 @@ FILENAME_MAPCOORDS = cfg['files']['MapCoords']
 if USE_IMAGE_SIZE:
     im = Image.open(FILENAME_MAPIMAGE)
     FIELD_WIDTH, FIELD_HEIGHT = im.size
+
 
 #Read in the data Vals
 coords = np.loadtxt(FILENAME_MAPCOORDS,delimiter=',')

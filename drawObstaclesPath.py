@@ -1,5 +1,6 @@
 from tkinter import *
 import tkinter as tk
+import config
 
 def drawObstaclesPath(obstacles,paths,bound_segments,waypoint_list,height,width,mapFilename):
     #This is a function that will draw all of the obstacles in the obstacle list and the segments of the path
@@ -35,10 +36,12 @@ def drawObstaclesPath(obstacles,paths,bound_segments,waypoint_list,height,width,
         w.create_line(segment.startPos.x, segment.startPos.y, segment.endPos.x, segment.endPos.y, fill='red')
 
 
-    def closeWindow(event):
+    def closeWindow():
         master.destroy()
 
     master.bind("w", closeWindow)
+    if (config.AUTO_EXIT):
+      master.after(config.AUTO_EXIT_TIME_MS, closeWindow)
 
     master.mainloop()
 
